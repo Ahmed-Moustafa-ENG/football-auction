@@ -156,7 +156,6 @@
             }
         });
 
-        // المزامنة الخاصة بـ العداد عبر التنبيه المستمر
         database.ref('gameState/timeLeft').on('value', (snapshot) => {
             const val = snapshot.val();
             if (val !== null && val !== undefined) {
@@ -199,27 +198,44 @@
             syncToFirebase();
         }
 
-        function startAuction() {
-            const team1Count = (gameState.p1.team || []).length;
-            const team2Count = (gameState.p2.team || []).length;
+        // دالة تحكم بالتحقق من تكار المراكز
+        function canAcceptPosition(team, pos) {
+            const count = team.filter(p => p.pos === pos).length;
+            if (pos === "CB") return count < 2; // قلوب الدفاع يسمح بـ 2
+            if (pos === "CM") return count < 3; // وسط الميدان يسمح بـ 3
+            return count < 1; // باقي المراكز (GK, LB, RB, ST, RW, LW) لاعب واحد فقط
+        }
 
-            if (team1Count >= 11 && team2Count >= 11) {
+        function startAuction() {
+            const team1 = (gameState.p1 && gameState.p1.team) ? gameState.p1.team : [];
+            const team2 = (gameState.p2 && gameState.p2.team) ? gameState.p2.team : [];
+
+            if (team1.length >= 11 && team2.length >= 11) {
                 alert("اكتملت التشكيلتان بـ 11 لاعباً!");
                 return;
             }
 
             let pool = [...(gameState.pool || defaultPool)];
 
-            const positionsAvailable = Array.from(new Set(pool.map(p => p.pos))).filter(pos => {
-                return pool.filter(p => p.pos === pos).length >= 2;
+            // تصفية المراكز المناسبة لكلا اللاعبين بدون تكرار الممنوع
+            const validPositions = Array.from(new Set(pool.map(p => p.pos))).filter(pos => {
+                const availableInPool = pool.filter(p => p.pos === pos).length >= 2;
+                const p1CanTake = canAcceptPosition(team1, pos);
+                const p2CanTake = canAcceptPosition(team2, pos);
+                return availableInPool && p1CanTake && p2CanTake;
             });
 
-            if (positionsAvailable.length === 0) {
-                alert("لا يوجد لاعبون كافون في نفس المركز للمزاد!");
-                return;
+            if (validPositions.length === 0) {
+                // إذا لم توجد مراكز متوافق عليها، نأخذ أي مركز متوفر فيه لاعبان لعدم إيقاف الجيم
+                const fallbackPositions = Array.from(new Set(pool.map(p => p.pos))).filter(pos => pool.filter(p => p.pos === pos).length >= 2);
+                if (fallbackPositions.length === 0) {
+                    alert("لا يوجد لاعبون كافون في القائمة!");
+                    return;
+                }
+                validPositions.push(...fallbackPositions);
             }
 
-            const chosenPos = positionsAvailable[Math.floor(Math.random() * positionsAvailable.length)];
+            const chosenPos = validPositions[Math.floor(Math.random() * validPositions.length)];
             const samePosPlayers = pool.filter(p => p.pos === chosenPos);
 
             const auctionIndexInSub = Math.floor(Math.random() * samePosPlayers.length);
