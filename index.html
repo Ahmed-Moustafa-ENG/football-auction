@@ -120,12 +120,14 @@
 
     <script>
         const defaultPool = [
-            { name: "تيبو كورتوا", pos: "GK", rating: 90 }, { name: "أليسون بيكر", pos: "GK", rating: 89 }, { name: "مانويل نوير", pos: "GK", rating: 88 }, { name: "جيانلويجي دوناروما", pos: "GK", rating: 87 },
-            { name: "فيرجيل فان دايك", pos: "CB", rating: 89 }, { name: "روبن دياز", pos: "CB", rating: 89 }, { name: "أنطونيو روديغر", pos: "CB", rating: 87 }, { name: "ماركينيوس", pos: "CB", rating: 86 }, { name: "إيدير ميليتاو", pos: "CB", rating: 85 }, { name: "رونالد أراوخو", pos: "CB", rating: 85 },
-            { name: "داني كارفاخال", pos: "RB", rating: 86 }, { name: "أشرف حكيمي", pos: "RB", rating: 85 }, { name: "ترينت ألكسندر أرنولد", pos: "RB", rating: 85 }, { name: "جول كوندي", pos: "RB", rating: 84 },
+            { name: "تيبو كورتوا", pos: "GK", rating: 90 }, { name: "أليسون بيكر", pos: "GK", rating: 89 }, { name: "مانويل نوير", pos: "GK", rating: 88 }, { name: "دوناروما", pos: "GK", rating: 87 },
+            { name: "فان دايك", pos: "CB", rating: 89 }, { name: "روبن دياز", pos: "CB", rating: 89 }, { name: "أنطونيو روديغر", pos: "CB", rating: 87 }, { name: "ماركينيوس", pos: "CB", rating: 86 }, { name: "إيدير ميليتاو", pos: "CB", rating: 85 }, { name: "رونالد أراوخو", pos: "CB", rating: 85 }, { name: "ألايبا", pos: "CB", rating: 84 }, { name: "ساليبا", pos: "CB", rating: 87 },
+            { name: "داني كارفاخال", pos: "RB", rating: 86 }, { name: "أشرف حكيمي", pos: "RB", rating: 85 }, { name: "ألكسندر أرنولد", pos: "RB", rating: 85 }, { name: "جول كوندي", pos: "RB", rating: 84 },
             { name: "ألفونسو ديفيز", pos: "LB", rating: 84 }, { name: "ثيو هيرنانديز", pos: "LB", rating: 85 }, { name: "اندرو روبرتسون", pos: "LB", rating: 85 }, { name: "فيرلاند ميندي", pos: "LB", rating: 83 },
-            { name: "رودري", pos: "CM", rating: 91 }, { name: "كيفين دي بروين", pos: "CM", rating: 91 }, { name: "جود بيلينجهام", pos: "CM", rating: 90 }, { name: "لوكا مودريتش", pos: "CM", rating: 87 }, { name: "فيديريكو فالفيردي", pos: "CM", rating: 88 }, { name: "بيرناردو سيلفا", pos: "CM", rating: 88 }, { name: "أليكسيس ماك أليستر", pos: "CM", rating: 85 }, { name: "أوريليين تشواميني", pos: "CM", rating: 85 },
-            { name: "كيليان مبابي", pos: "ST", rating: 92 }, { name: "إرلينغ هالاند", pos: "ST", rating: 91 }, { name: "فينيسيوس جونيور", pos: "LW", rating: 90 }, { name: "محمد صلاح", pos: "RW", rating: 89 }, { name: "ليونيل ميسي", pos: "RW", rating: 88 }, { name: "كريستيانو رونالدو", pos: "ST", rating: 86 }, { name: "هاري كين", pos: "ST", rating: 89 }, { name: "لامين يامال", pos: "RW", rating: 88 }, { name: "رودريغو", pos: "RW", rating: 86 }, { name: "رافينيا", pos: "LW", rating: 85 }
+            { name: "رودري", pos: "CM", rating: 91 }, { name: "كيفين دي بروين", pos: "CM", rating: 91 }, { name: "جود بيلينجهام", pos: "CM", rating: 90 }, { name: "لوكا مودريتش", pos: "CM", rating: 87 }, { name: "فالفيردي", pos: "CM", rating: 88 }, { name: "بيرناردو سيلفا", pos: "CM", rating: 88 }, { name: "ماك أليستر", pos: "CM", rating: 85 }, { name: "تشواميني", pos: "CM", rating: 85 },
+            { name: "فينيسيوس جونيور", pos: "LW", rating: 90 }, { name: "لويس دياز", pos: "LW", rating: 85 }, { name: "كفاراتسخيليا", pos: "LW", rating: 86 }, { name: "رافاييل لياو", pos: "LW", rating: 86 },
+            { name: "محمد صلاح", pos: "RW", rating: 89 }, { name: "ليونيل ميسي", pos: "RW", rating: 88 }, { name: "لامين يامال", pos: "RW", rating: 88 }, { name: "رودريغو", pos: "RW", rating: 86 },
+            { name: "كيليان مبابي", pos: "ST", rating: 92 }, { name: "إرلينغ هالاند", pos: "ST", rating: 91 }, { name: "كريستيانو رونالدو", pos: "ST", rating: 86 }, { name: "هاري كين", pos: "ST", rating: 89 }, { name: "لاوتارو مارتينيز", pos: "ST", rating: 87 }
         ];
 
         let myRole = 1;
@@ -152,6 +154,8 @@
             const data = snapshot.val();
             if (data) {
                 gameState = data;
+                if (!gameState.p1.team) gameState.p1.team = [];
+                if (!gameState.p2.team) gameState.p2.team = [];
                 renderState();
             }
         });
@@ -172,7 +176,7 @@
             gameState = {
                 p1: { budget: 200, team: [], coach: null },
                 p2: { budget: 200, team: [], coach: null },
-                pool: [...defaultPool],
+                pool: JSON.parse(JSON.stringify(defaultPool)),
                 currentAuction: null,
                 hiddenFreePlayer: null,
                 activeTurn: 1,
@@ -198,53 +202,52 @@
             syncToFirebase();
         }
 
-        // دالة تحكم بالتحقق من تكار المراكز
-        function canAcceptPosition(team, pos) {
+        // فحص عدد لاعبي كل مركز
+        function getPosLimit(pos) {
+            if (pos === "CB") return 2;
+            if (pos === "CM") return 3;
+            return 1;
+        }
+
+        function canPlayerTakePos(team, pos) {
             const count = team.filter(p => p.pos === pos).length;
-            if (pos === "CB") return count < 2; // قلوب الدفاع يسمح بـ 2
-            if (pos === "CM") return count < 3; // وسط الميدان يسمح بـ 3
-            return count < 1; // باقي المراكز (GK, LB, RB, ST, RW, LW) لاعب واحد فقط
+            return count < getPosLimit(pos);
         }
 
         function startAuction() {
-            const team1 = (gameState.p1 && gameState.p1.team) ? gameState.p1.team : [];
-            const team2 = (gameState.p2 && gameState.p2.team) ? gameState.p2.team : [];
+            const team1 = gameState.p1.team || [];
+            const team2 = gameState.p2.team || [];
 
             if (team1.length >= 11 && team2.length >= 11) {
-                alert("اكتملت التشكيلتان بـ 11 لاعباً!");
+                alert("اكتملت التشكيلتان بالكامل!");
                 return;
             }
 
-            let pool = [...(gameState.pool || defaultPool)];
+            let pool = (gameState.pool && gameState.pool.length > 0) ? [...gameState.pool] : JSON.parse(JSON.stringify(defaultPool));
 
-            // تصفية المراكز المناسبة لكلا اللاعبين بدون تكرار الممنوع
+            // تحديد المراكز الصالحة لكلا الفريقين
             const validPositions = Array.from(new Set(pool.map(p => p.pos))).filter(pos => {
-                const availableInPool = pool.filter(p => p.pos === pos).length >= 2;
-                const p1CanTake = canAcceptPosition(team1, pos);
-                const p2CanTake = canAcceptPosition(team2, pos);
-                return availableInPool && p1CanTake && p2CanTake;
+                const countInPool = pool.filter(p => p.pos === pos).length;
+                return countInPool >= 2 && canPlayerTakePos(team1, pos) && canPlayerTakePos(team2, pos);
             });
 
             if (validPositions.length === 0) {
-                // إذا لم توجد مراكز متوافق عليها، نأخذ أي مركز متوفر فيه لاعبان لعدم إيقاف الجيم
-                const fallbackPositions = Array.from(new Set(pool.map(p => p.pos))).filter(pos => pool.filter(p => p.pos === pos).length >= 2);
-                if (fallbackPositions.length === 0) {
-                    alert("لا يوجد لاعبون كافون في القائمة!");
-                    return;
-                }
-                validPositions.push(...fallbackPositions);
+                alert("لا توجد مراكز متوافقة كافية متبقية!");
+                return;
             }
 
             const chosenPos = validPositions[Math.floor(Math.random() * validPositions.length)];
             const samePosPlayers = pool.filter(p => p.pos === chosenPos);
 
-            const auctionIndexInSub = Math.floor(Math.random() * samePosPlayers.length);
-            const auctionPlayer = samePosPlayers[auctionIndexInSub];
+            // اختيار اللاعب الظاهر والمجهول بنفس المركز بالضبط
+            const p1Index = Math.floor(Math.random() * samePosPlayers.length);
+            const auctionPlayer = samePosPlayers[p1Index];
 
-            const remainingSub = samePosPlayers.filter((_, idx) => idx !== auctionIndexInSub);
-            const freePlayer = remainingSub[Math.floor(Math.random() * remainingSub.length)];
+            const remainingInPos = samePosPlayers.filter((_, idx) => idx !== p1Index);
+            const freePlayer = remainingInPos[Math.floor(Math.random() * remainingInPos.length)];
 
-            pool = pool.filter(p => p !== auctionPlayer && p !== freePlayer);
+            // حذف اللاعبين المستخرجين من المحافظة (Pool)
+            pool = pool.filter(p => p.name !== auctionPlayer.name && p.name !== freePlayer.name);
 
             let startingPlayer = gameState.nextStarter || 1;
 
@@ -257,7 +260,7 @@
             gameState.timeLeft = 45;
 
             syncToFirebase();
-            runTimerHost();
+            if (myRole === 1) runTimerHost();
         }
 
         function runTimerHost() {
@@ -285,7 +288,7 @@
             const playerObj = playerNum === 1 ? gameState.p1 : gameState.p2;
 
             if (isNaN(bidAmount) || bidAmount <= 0 || bidAmount <= gameState.currentAuction.currentBid || bidAmount > playerObj.budget) {
-                alert("مبلغ غير صالح أو أعلى من الميزانية!");
+                alert("المبلغ غير صالح أو أكبر من ميزانيتك!");
                 return;
             }
 
@@ -296,7 +299,6 @@
             inputField.value = '';
 
             syncToFirebase();
-            runTimerHost();
         }
 
         function passTurn(playerNum) {
@@ -307,7 +309,6 @@
 
         function foldAuction(playerNum) {
             if (myRole !== playerNum || gameState.activeTurn !== playerNum) return;
-            clearInterval(localTimer);
             const winner = playerNum === 1 ? 2 : 1;
             gameState.currentAuction.highestBidder = winner;
             finishAuction();
@@ -346,10 +347,11 @@
 
             syncToFirebase();
 
+            // للانتقال التلقائي للراوند القادم
             if (t1 < 11 || t2 < 11) {
                 setTimeout(() => {
-                    startAuction();
-                }, 2000);
+                    if (myRole === 1) startAuction();
+                }, 2500);
             }
         }
 
@@ -414,7 +416,7 @@
         function updateTurnUI() {
             const isMyTurn = (gameState.activeTurn === myRole) && (gameState.status === "bidding");
 
-            document.getElementById('turn-text').innerText = gameState.status === "bidding" ? `الدور الحالي: لاعب ${gameState.activeTurn}` : "انتظر المزاد التالي...";
+            document.getElementById('turn-text').innerText = gameState.status === "bidding" ? `الدور الحالي: لاعب ${gameState.activeTurn}` : "انتظر الجولة التالية...";
 
             document.getElementById('card-1').classList.toggle('active-turn', gameState.activeTurn === 1);
             document.getElementById('card-2').classList.toggle('active-turn', gameState.activeTurn === 2);
