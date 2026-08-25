@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مزاد كرة القدم - أونلاين</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #0f172a; color: white; text-align: center; margin: 20px; }
+        .container { display: flex; justify-content: space-around; margin-top: 20px; }
+        .card { background: #1e293b; padding: 15px; border-radius: 8px; width: 45%; border: 2px solid #334155; }
+        .card.active-turn { border: 2px solid #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .auction-box { background: #1e293b; border: 2px solid #f59e0b; padding: 20px; margin: 20px auto; width: 70%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .versus-box { display: flex; justify-content: space-around; align-items: center; background: #0f172a; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        input[type="number"], select { width: 110px; padding: 8px; font-size: 16px; border-radius: 5px; border: none; text-align: center; }
+        button { background: #10b981; color: white; border: none; padding: 10px 18px; cursor: pointer; font-size: 15px; border-radius: 5px; margin: 5px; font-weight: bold; }
+        button.fold-btn { background: #ef4444; }
+        button.pass-btn { background: #64748b; }
+        button.reset-always { background: #dc2626; font-size: 15px; padding: 8px 16px; margin-right: 15px; }
+        button:disabled { background: #475569; cursor: not-allowed; }
+        .timer { font-size: 24px; color: #ef4444; font-weight: bold; }
+        .badge { background: #3b82f6; padding: 3px 8px; border-radius: 4px; font-size: 13px; }
+        .pos-badge { background: #f59e0b; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .turn-indicator { font-size: 18px; color: #38bdf8; margin-bottom: 10px; font-weight: bold; }
+        .player-select { background: #0284c7; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .team-list { text-align: right; font-size: 13px; line-height: 1.8; list-style: none; padding: 0; }
+        .team-list li { background: #0f172a; margin: 4px 0; padding: 6px 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        .coach-card { background: #334155; padding: 10px; border-radius: 6px; margin-top: 10px; font-weight: bold; color: #38bdf8; }
+    </style>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAwk7lwAJqsLPRGdDnLqzWsBDEZ-c-JgdM",
+        authDomain: "football-bid.firebaseapp.com",
+        databaseURL: "https://football-bid-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "football-bid",
+        storageBucket: "football-bid.firebasestorage.app",
+        messagingSenderId: "538872799931",
+        appId: "1:538872799931:web:9ae8a153b1d929acefbf9e",
+        measurementId: "G-DWE9E848KV"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+    </script>
+</head>
+<body>
+
+    <h1>🏆 مزاد كرة القدم الحر (11 ضد 11) 🏆</h1>
+
+    <div class="player-select">
+        <label style="font-weight:bold; font-size: 18px;">دورك في المباراة: </label>
+        <select id="my-player-role" onchange="setMyRole(this.value)">
+            <option value="1">لاعب 1</option>
+            <option value="2">لاعب 2</option>
+        </select>
+        <button class="reset-always" onclick="resetOnlineGame()">تصفير وإنشاء جيم جديد 🔄</button>
+    </div>
+
+    <div class="auction-box" id="auction-area">
+        <button onclick="startAuction()" id="start-btn" style="background:#3b82f6; font-size:18px;">بدء اللعبة 🎲</button>
+        
+        <div class="versus-box">
+            <div>
+                <h4 style="color: #f59e0b; margin:5px;">⭐ لاعب المزاد</h4>
+                <h2 id="auction-player-name" style="margin:5px;">-</h2>
+                <p>المركز: <span id="auction-player-pos" class="pos-badge">-</span> | التقييم: <span id="auction-player-rating" class="badge">-</span></p>
+            </div>
+            <div style="font-size: 24px; font-weight: bold; color: #ef4444;">VS</div>
+            <div>
+                <h4 style="color: #a855f7; margin:5px;">❓ اللاعب العشوائي المفاجأة</h4>
+                <h2 id="free-player-name" style="margin:5px;">???</h2>
+                <p>المركز: <span id="free-player-pos" class="pos-badge">???</span> | التقييم: <span id="free-player-rating" class="badge">مجهول</span></p>
+            </div>
+        </div>
+
+        <div class="turn-indicator" id="turn-text">اضغط بدء اللعبة للبدء</div>
+        <p>أعلى مزايدة: <span id="current-bid" style="color: #10b981; font-size: 22px; font-weight:bold;">0</span>M$ (بواسطة: <span id="highest-bidder">لا يوجد</span>)</p>
+        <div class="timer">الوقت المتبقي: <span id="timer-display">45</span> ثانية</div>
+    </div>
+
+    <div class="container">
+        <!-- لاعب 1 -->
+        <div class="card" id="card-1">
+            <h3>اللاعب 1</h3>
+            <p>الميزانية المتبقية: <strong id="budget-1" style="color:#10b981">200</strong>M$</p>
+            <p>عدد التشكيلة: <span id="count-1">0</span>/11</p>
+            <div>
+                <input type="number" id="bid-input-1" placeholder="المبلغ" disabled>
+                <button id="btn-bid-1" onclick="placeCustomBid(1)" disabled>مزايدة</button>
+                <button id="btn-pass-1" class="pass-btn" onclick="passTurn(1)" disabled>تخطي</button>
+                <button id="btn-fold-1" class="fold-btn" onclick="foldAuction(1)" disabled>تنازل</button>
+            </div>
+            <div id="coach-1" class="coach-card" style="display:none;">المدرب: -</div>
+            <ul id="team-1" class="team-list"></ul>
+        </div>
+
+        <!-- لاعب 2 -->
+        <div class="card" id="card-2">
+            <h3>اللاعب 2</h3>
+            <p>الميزانية المتبقية: <strong id="budget-2" style="color:#10b981">200</strong>M$</p>
+            <p>عدد التشكيلة: <span id="count-2">0</span>/11</p>
+            <div>
+                <input type="number" id="bid-input-2" placeholder="المبلغ" disabled>
+                <button id="btn-bid-2" onclick="placeCustomBid(2)" disabled>مزايدة</button>
+                <button id="btn-pass-2" class="pass-btn" onclick="passTurn(2)" disabled>تخطي</button>
+                <button id="btn-fold-2" class="fold-btn" onclick="foldAuction(2)" disabled>تنازل</button>
+            </div>
+            <div id="coach-2" class="coach-card" style="display:none;">المدرب: -</div>
+            <ul id="team-2" class="team-list"></ul>
+        </div>
+    </div>
+
+    <br>
+    <button id="start-match-btn" onclick="simulateMatch()" style="display:none; background: #ef4444; font-size: 22px; padding: 12px 30px;">محاكاة المباراة والتوقع ⚽</button>
+    <div id="match-prediction" style="color: #38bdf8; font-size: 20px; margin-top: 15px; font-weight: bold;"></div>
+    <h2 id="match-result" style="color: #f59e0b;"></h2>
+
+    <script>
+        const defaultPool = [
+            // حراس المرمى (GK)
+            { name: "تيبو كورتوا", pos: "GK", rating: 90 }, { name: "أليسون بيكر", pos: "GK", rating: 89 }, { name: "مانويل نوير", pos: "GK", rating: 88 }, { name: "جيانلويجي دوناروما", pos: "GK", rating: 87 },
+            // قلوب الدفاع (CB)
+            { name: "فيرجيل فان دايك", pos: "CB", rating: 89 }, { name: "روبن دياز", pos: "CB", rating: 89 }, { name: "أنطونيو روديغر", pos: "CB", rating: 87 }, { name: "ماركينيوس", pos: "CB", rating: 86 }, { name: "إيدير ميليتاو", pos: "CB", rating: 85 }, { name: "رونالد أراوخو", pos: "CB", rating: 85 },
+            // باك يمين (RB)
+            { name: "داني كارفاخال", pos: "RB", rating: 86 }, { name: "أشرف حكيمي", pos: "RB", rating: 85 }, { name: "ترينت ألكسندر أرنولد", pos: "RB", rating: 85 }, { name: "جول كوندي", pos: "RB", rating: 84 },
+            // باك شمال (LB)
+            { name: "ألفونسو ديفيز", pos: "LB", rating: 84 }, { name: "ثيو هيرنانديز", pos: "LB", rating: 85 }, { name: "اندرو روبرتسون", pos: "LB", rating: 85 }, { name: "فيرلاند ميندي", pos: "LB", rating: 83 },
+            // خط وسط (CM)
+            { name: "رودري", pos: "CM", rating: 91 }, { name: "كيفين دي بروين", pos: "CM", rating: 91 }, { name: "جود بيلينجهام", pos: "CM", rating: 90 }, { name: "لوكا مودريتش", pos: "CM", rating: 87 }, { name: "فيديريكو فالفيردي", pos: "CM", rating: 88 }, { name: "بيرناردو سيلفا", pos: "CM", rating: 88 }, { name: "أليكسيس ماك أليستر", pos: "CM", rating: 85 }, { name: "أوريليين تشواميني", pos: "CM", rating: 85 },
+            // مهاجمين وأجنحة (ST/RW/LW)
+            { name: "كيليان مبابي", pos: "ST", rating: 92 }, { name: "إرلينغ هالاند", pos: "ST", rating: 91 }, { name: "فينيسيوس جونيور", pos: "LW", rating: 90 }, { name: "محمد صلاح", pos: "RW", rating: 89 }, { name: "ليونيل ميسي", pos: "RW", rating: 88 }, { name: "كريستيانو رونالدو", pos: "ST", rating: 86 }, { name: "هاري كين", pos: "ST", rating: 89 }, { name: "لامين يامال", pos: "RW", rating: 88 }, { name: "رودريغو", pos: "RW", rating: 86 }, { name: "رافينيا", pos: "LW", rating: 85 }
+        ];
+
+        let myRole = 1;
+        let gameState = {
+            p1: { budget: 200, team: [], coach: null },
+            p2: { budget: 200, team: [], coach: null },
+            pool: [...defaultPool],
+            currentAuction: null,
+            hiddenFreePlayer: null,
+            activeTurn: 1,
+            nextStarter: 1,
+            status: "idle",
+            timeLeft: 45
+        };
+
+        let countdown = null;
+
+        function setMyRole(role) {
+            myRole = parseInt(role);
+            updateTurnUI();
+        }
+
+        database.ref('gameState').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                gameState = data;
+                renderState();
+            }
+        });
+
+        function syncToFirebase() {
+            database.ref('gameState').set(gameState);
+        }
+
+        function resetOnlineGame() {
+            clearInterval(countdown);
+            gameState = {
+                p1: { budget: 200, team: [], coach: null },
+                p2: { budget: 200, team: [], coach: null },
+                pool: [...defaultPool],
+                currentAuction: null,
+                hiddenFreePlayer: null,
+                activeTurn: 1,
+                nextStarter: 1,
+                status: "idle",
+                timeLeft: 45
+            };
+            
+            document.getElementById('auction-player-name').innerText = "-";
+            document.getElementById('auction-player-pos').innerText = "-";
+            document.getElementById('auction-player-rating').innerText = "-";
+            document.getElementById('free-player-name').innerText = "???";
+            document.getElementById('free-player-pos').innerText = "???";
+            document.getElementById('free-player-rating').innerText = "مجهول";
+            document.getElementById('current-bid').innerText = "0";
+            document.getElementById('highest-bidder').innerText = "لا يوجد";
+            document.getElementById('coach-1').style.display = 'none';
+            document.getElementById('coach-2').style.display = 'none';
+            document.getElementById('match-result').innerHTML = '';
+            document.getElementById('match-prediction').innerHTML = '';
+            document.getElementById('start-match-btn').style.display = 'none';
+            
+            syncToFirebase();
+        }
+
+        function startAuction() {
+            const team1Count = (gameState.p1.team || []).length;
+            const team2Count = (gameState.p2.team || []).length;
+
+            if (team1Count >= 11 && team2Count >= 11) {
+                alert("اكتملت التشكيلتان بـ 11 لاعباً!");
+                return;
+            }
+
+            if (!gameState.pool || gameState.pool.length < 2) {
+                alert("انتهت قائمة اللاعبين المتاحة!");
+                return;
+            }
+
+            let pool = [...gameState.pool];
+
+            // 1. استخراج جميع المراكز المتاحة التي تحتوي على لاعبين على الأقل
+            const positionsAvailable = Array.from(new Set(pool.map(p => p.pos))).filter(pos => {
+                return pool.filter(p => p.pos === pos).length >= 2;
+            });
+
+            if (positionsAvailable.length === 0) {
+                alert("لا يوجد لاعبون كافون في نفس المركز للمزاد!");
+                return;
+            }
+
+            // 2. اختيار مركز عشوائي موحد للمزاد واللاعب العشوائي
+            const chosenPos = positionsAvailable[Math.floor(Math.random() * positionsAvailable.length)];
+            const samePosPlayers = pool.filter(p => p.pos === chosenPos);
+
+            // 3. اختيار لاعب المزاد واللاعب المفاجأة من نفس المركز
+            const auctionIndexInSub = Math.floor(Math.random() * samePosPlayers.length);
+            const auctionPlayer = samePosPlayers[auctionIndexInSub];
+
+            const remainingSub = samePosPlayers.filter((_, idx) => idx !== auctionIndexInSub);
+            const freePlayer = remainingSub[Math.floor(Math.random() * remainingSub.length)];
+
+            // 4. حذف اللاعبين المختاريْن من القائمة الكلية
+            pool = pool.filter(p => p !== auctionPlayer && p !== freePlayer);
+
+            let startingPlayer = gameState.nextStarter || 1;
+
+            gameState.pool = pool;
+            gameState.currentAuction = { player: auctionPlayer, currentBid: 0, highestBidder: null };
+            gameState.hiddenFreePlayer = freePlayer;
+            gameState.activeTurn = startingPlayer;
+            gameState.nextStarter = startingPlayer === 1 ? 2 : 1;
+            gameState.status = "bidding";
+            gameState.timeLeft = 45;
+
+            syncToFirebase();
+            startTimerOnHost();
+        }
+
+        function startTimerOnHost() {
+            clearInterval(countdown);
+            countdown = setInterval(() => {
+                if (gameState.status === "bidding" && gameState.timeLeft > 0) {
+                    gameState.timeLeft--;
+                    database.ref('gameState/timeLeft').set(gameState.timeLeft);
+                } else if (gameState.status === "bidding" && gameState.timeLeft <= 0) {
+                    clearInterval(countdown);
+                    finishAuction();
+                }
+            }, 1000);
+        }
+
+        function placeCustomBid(playerNum) {
+            if (myRole !== playerNum || gameState.activeTurn !== playerNum) return;
+
+            const inputField = document.getElementById(`bid-input-${playerNum}`);
+            const bidAmount = parseInt(inputField.value);
+            const playerObj = playerNum === 1 ? gameState.p1 : gameState.p2;
+
+            if (isNaN(bidAmount) || bidAmount <= 0 || bidAmount <= gameState.currentAuction.currentBid || bidAmount > playerObj.budget) {
+                alert("مبلغ غير صالح أو أعلى من الميزانية!");
+                return;
+            }
+
+            gameState.currentAuction.currentBid = bidAmount;
+            gameState.currentAuction.highestBidder = playerNum;
+            gameState.activeTurn = playerNum === 1 ? 2 : 1;
+            inputField.value = '';
+
+            syncToFirebase();
+        }
+
+        function passTurn(playerNum) {
+            if (myRole !== playerNum || gameState.activeTurn !== playerNum) return;
+            gameState.activeTurn = playerNum === 1 ? 2 : 1;
+            syncToFirebase();
+        }
+
+        function foldAuction(playerNum) {
+            if (myRole !== playerNum || gameState.activeTurn !== playerNum) return;
+            clearInterval(countdown);
+            const winner = playerNum === 1 ? 2 : 1;
+            gameState.currentAuction.highestBidder = winner;
+            finishAuction();
+        }
+
+        function finishAuction() {
+            gameState.status = "idle";
+            let winner = gameState.currentAuction.highestBidder;
+
+            if (!gameState.p1.team) gameState.p1.team = [];
+            if (!gameState.p2.team) gameState.p2.team = [];
+
+            if (winner) {
+                let loser = winner === 1 ? 2 : 1;
+                let winObj = winner === 1 ? gameState.p1 : gameState.p2;
+                let loseObj = loser === 1 ? gameState.p1 : gameState.p2;
+
+                winObj.budget -= gameState.currentAuction.currentBid;
+                winObj.team.push(gameState.currentAuction.player);
+                loseObj.team.push(gameState.hiddenFreePlayer);
+            } else {
+                gameState.p1.team.push(gameState.currentAuction.player);
+                gameState.p2.team.push(gameState.hiddenFreePlayer);
+            }
+
+            gameState.activeTurn = 0;
+
+            const t1 = gameState.p1.team.length;
+            const t2 = gameState.p2.team.length;
+
+            if (t1 >= 11 && t2 >= 11) {
+                gameState.p1.coach = assignCoach(gameState.p1.budget);
+                gameState.p2.coach = assignCoach(gameState.p2.budget);
+            }
+
+            syncToFirebase();
+
+            if (t1 < 11 || t2 < 11) {
+                setTimeout(() => {
+                    if (myRole === 1) startAuction();
+                }, 2500);
+            }
+        }
+
+        function assignCoach(remainingBudget) {
+            if (remainingBudget >= 60) return { name: "بيب غوارديولا", rating: 95 };
+            if (remainingBudget >= 40) return { name: "كارلو أنشيلوتي", rating: 93 };
+            if (remainingBudget >= 25) return { name: "يورغن كلوب", rating: 90 };
+            if (remainingBudget >= 10) return { name: "ميكيل أرتيتا", rating: 85 };
+            return { name: "مدرب محلي (ميزانية صفرية)", rating: 70 };
+        }
+
+        function renderState() {
+            document.getElementById('budget-1').innerText = gameState.p1 ? gameState.p1.budget : 200;
+            document.getElementById('budget-2').innerText = gameState.p2 ? gameState.p2.budget : 200;
+
+            const team1 = (gameState.p1 && gameState.p1.team) ? gameState.p1.team : [];
+            const team2 = (gameState.p2 && gameState.p2.team) ? gameState.p2.team : [];
+
+            document.getElementById('count-1').innerText = team1.length;
+            document.getElementById('count-2').innerText = team2.length;
+
+            document.getElementById('team-1').innerHTML = team1.map(p => `<li><span>${p.name}</span> <div><span class="pos-badge">${p.pos}</span> <span class="badge">${p.rating}</span></div></li>`).join('');
+            document.getElementById('team-2').innerHTML = team2.map(p => `<li><span>${p.name}</span> <div><span class="pos-badge">${p.pos}</span> <span class="badge">${p.rating}</span></div></li>`).join('');
+
+            if (gameState.p1 && gameState.p1.coach) {
+                document.getElementById('coach-1').style.display = 'block';
+                document.getElementById('coach-1').innerHTML = `👨‍💼 المدرب: ${gameState.p1.coach.name} (تقييم: ${gameState.p1.coach.rating})`;
+            }
+            if (gameState.p2 && gameState.p2.coach) {
+                document.getElementById('coach-2').style.display = 'block';
+                document.getElementById('coach-2').innerHTML = `👨‍💼 المدرب: ${gameState.p2.coach.name} (تقييم: ${gameState.p2.coach.rating})`;
+            }
+
+            document.getElementById('timer-display').innerText = gameState.timeLeft || 45;
+
+            if (gameState.currentAuction) {
+                document.getElementById('auction-player-name').innerText = gameState.currentAuction.player.name;
+                document.getElementById('auction-player-pos').innerText = gameState.currentAuction.player.pos;
+                document.getElementById('auction-player-rating').innerText = gameState.currentAuction.player.rating;
+                document.getElementById('current-bid').innerText = gameState.currentAuction.currentBid;
+                document.getElementById('highest-bidder').innerText = gameState.currentAuction.highestBidder ? "لاعب " + gameState.currentAuction.highestBidder : "لا يوجد";
+            }
+
+            if (gameState.status === "idle" && gameState.hiddenFreePlayer) {
+                document.getElementById('free-player-name').innerText = gameState.hiddenFreePlayer.name;
+                document.getElementById('free-player-pos').innerText = gameState.hiddenFreePlayer.pos;
+                document.getElementById('free-player-rating').innerText = gameState.hiddenFreePlayer.rating;
+            } else if (gameState.status === "bidding") {
+                document.getElementById('free-player-name').innerText = "???";
+                document.getElementById('free-player-pos').innerText = gameState.currentAuction ? gameState.currentAuction.player.pos : "???";
+                document.getElementById('free-player-rating').innerText = "مجهول";
+            }
+
+            const isGameStarted = gameState.status === "bidding" || team1.length > 0 || team2.length > 0;
+            document.getElementById('my-player-role').disabled = isGameStarted;
+            document.getElementById('start-btn').style.display = isGameStarted ? 'none' : 'inline-block';
+
+            const isGameOver = (team1.length >= 11 && team2.length >= 11);
+            document.getElementById('start-match-btn').style.display = isGameOver ? 'inline-block' : 'none';
+
+            updateTurnUI();
+        }
+
+        function updateTurnUI() {
+            const isMyTurn = (gameState.activeTurn === myRole) && (gameState.status === "bidding");
+
+            document.getElementById('turn-text').innerText = gameState.status === "bidding" ? `الدور الحالي: لاعب ${gameState.activeTurn}` : "اضغط بدء اللعبة أو انتظر المزاد التالي...";
+
+            document.getElementById('card-1').classList.toggle('active-turn', gameState.activeTurn === 1);
+            document.getElementById('card-2').classList.toggle('active-turn', gameState.activeTurn === 2);
+
+            document.getElementById('bid-input-1').disabled = !(isMyTurn && myRole === 1);
+            document.getElementById('btn-bid-1').disabled = !(isMyTurn && myRole === 1);
+            document.getElementById('btn-pass-1').disabled = !(isMyTurn && myRole === 1);
+            document.getElementById('btn-fold-1').disabled = !(isMyTurn && myRole === 1);
+
+            document.getElementById('bid-input-2').disabled = !(isMyTurn && myRole === 2);
+            document.getElementById('btn-bid-2').disabled = !(isMyTurn && myRole === 2);
+            document.getElementById('btn-pass-2').disabled = !(isMyTurn && myRole === 2);
+            document.getElementById('btn-fold-2').disabled = !(isMyTurn && myRole === 2);
+        }
+
+        function simulateMatch() {
+            let p1Players = (gameState.p1.team || []).reduce((sum, p) => sum + p.rating, 0);
+            let p2Players = (gameState.p2.team || []).reduce((sum, p) => sum + p.rating, 0);
+
+            let c1 = gameState.p1.coach ? gameState.p1.coach.rating : 70;
+            let c2 = gameState.p2.coach ? gameState.p2.coach.rating : 70;
+
+            let totalPower1 = p1Players + (c1 * 1.5);
+            let totalPower2 = p2Players + (c2 * 1.5);
+
+            let totalSum = totalPower1 + totalPower2;
+            let prob1 = Math.round((totalPower1 / totalSum) * 100);
+            let prob2 = 100 - prob1;
+
+            document.getElementById('match-prediction').innerHTML = `📊 توقعات الذكاء الاصطناعي للفوز:<br>لاعب 1: ${prob1}% | لاعب 2: ${prob2}%`;
+
+            let p1Goals = Math.floor((totalPower1 / 380) + (Math.random() * 2.5));
+            let p2Goals = Math.floor((totalPower2 / 380) + (Math.random() * 2.5));
+
+            let resultText = `<br>⚽ <strong>النتيجة النهائية للمباراة:</strong><br> لاعب 1 [ ${p1Goals} ] - [ ${p2Goals} ] لاعب 2<br>`;
+            if (p1Goals > p2Goals) resultText += "🏆 الفائز باللقب هو اللاعب 1!";
+            else if (p2Goals > p1Goals) resultText += "🏆 الفائز باللقب هو اللاعب 2!";
+            else resultText += "🤝 تعادل الفريقان وبانتظار ركلات الترجيح!";
+
+            document.getElementById('match-result').innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>
