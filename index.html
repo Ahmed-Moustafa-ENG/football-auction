@@ -119,7 +119,6 @@
     <h2 id="match-result" style="color: #f59e0b;"></h2>
 
     <script>
-        // ترتيب المراكز المطلوب بالضبط
         const POSITION_ORDER = [
             { pos: "GK", label: "حارس المرمى" },
             { pos: "LB", label: "باك شمال" },
@@ -149,8 +148,6 @@
         ];
 
         const defaultPool = [
-            { name: "ليونيل ميسي", pos: "RW", rating: 99 },
-            { name: "كريستيانو رونالدو", pos: "ST", rating: 99 },
             // GK
             { name: "تيبو كورتوا", pos: "GK", rating: 90 }, { name: "أليسون بيكر", pos: "GK", rating: 89 },
             { name: "مانويل نوير", pos: "GK", rating: 88 }, { name: "جانلويجي دوناروما", pos: "GK", rating: 88 },
@@ -161,6 +158,8 @@
             { name: "أنطونيو روديغر", pos: "CB", rating: 88 }, { name: "وليام ساليبا", pos: "CB", rating: 88 },
             { name: "ماركينيوس", pos: "CB", rating: 86 }, { name: "رونالد أراوخو", pos: "CB", rating: 86 },
             { name: "أليساندرو باستوني", pos: "CB", rating: 87 }, { name: "جوناثان تاه", pos: "CB", rating: 86 },
+            { name: "دانيال أغر", pos: "CB", rating: 84 }, { name: "إيدير ميليتاو", pos: "CB", rating: 85 },
+            { name: "كريستيان روميرو", pos: "CB", rating: 84 }, { name: "جابرييل ماجالهايس", pos: "CB", rating: 86 },
             // RB
             { name: "داني كارفاخال", pos: "RB", rating: 87 }, { name: "أشرف حكيمي", pos: "RB", rating: 86 },
             { name: "ترينت ألكسندر أرنولد", pos: "RB", rating: 86 }, { name: "جيريمي فريمبونغ", pos: "RB", rating: 85 },
@@ -174,18 +173,22 @@
             { name: "جود بيلينجهام", pos: "CM", rating: 90 }, { name: "فيديريكو فالفيردي", pos: "CM", rating: 89 },
             { name: "مارتن أوديغارد", pos: "CM", rating: 89 }, { name: "ديكلان رايس", pos: "CM", rating: 88 },
             { name: "بيرناردو سيلفا", pos: "CM", rating: 88 }, { name: "لوكا مودريتش", pos: "CM", rating: 86 },
+            { name: "إلكاي غوندوغان", pos: "CM", rating: 85 }, { name: "أوريليين تشواميني", pos: "CM", rating: 85 },
+            { name: "أليكسيس ماك أليستر", pos: "CM", rating: 85 }, { name: "جافي", pos: "CM", rating: 84 },
             // LW
             { name: "فينيسيوس جونيور", pos: "LW", rating: 90 }, { name: "رافاييل لياو", pos: "LW", rating: 86 },
             { name: "خفيشا كفاراتسخيليا", pos: "LW", rating: 86 }, { name: "لويس دياز", pos: "LW", rating: 85 },
             { name: "سون هيونغ مين", pos: "LW", rating: 87 }, { name: "نيكو وليامز", pos: "LW", rating: 85 },
             // RW
-            { name: "محمد صلاح", pos: "RW", rating: 89 }, { name: "لامين يامال", pos: "RW", rating: 88 },
-            { name: "بوكايو ساكا", pos: "RW", rating: 88 }, { name: "رودريغو غوس", pos: "RW", rating: 86 },
-            { name: "عثمان ديمبيلي", pos: "RW", rating: 86 }, { name: "رافينيا", pos: "RW", rating: 86 },
+            { name: "ليونيل ميسي", pos: "RW", rating: 99 }, { name: "محمد صلاح", pos: "RW", rating: 89 }, 
+            { name: "لامين يامال", pos: "RW", rating: 88 }, { name: "بوكايو ساكا", pos: "RW", rating: 88 }, 
+            { name: "رودريغو غوس", pos: "RW", rating: 86 }, { name: "عثمان ديمبيلي", pos: "RW", rating: 86 }, 
+            { name: "رافينيا", pos: "RW", rating: 86 },
             // ST
-            { name: "كيليان مبابي", pos: "ST", rating: 91 }, { name: "إرلينغ هالاند", pos: "ST", rating: 91 },
-            { name: "هاري كين", pos: "ST", rating: 90 }, { name: "لاوتارو مارتينيز", pos: "ST", rating: 89 },
-            { name: "روبرت ليفاندوفسكي", pos: "ST", rating: 88 }, { name: "فكتور أوسيمين", pos: "ST", rating: 87 }
+            { name: "كريستيانو رونالدو", pos: "ST", rating: 99 }, { name: "كيليان مبابي", pos: "ST", rating: 91 }, 
+            { name: "إرلينغ هالاند", pos: "ST", rating: 91 }, { name: "هاري كين", pos: "ST", rating: 90 }, 
+            { name: "لاوتارو مارتينيز", pos: "ST", rating: 89 }, { name: "روبرت ليفاندوفسكي", pos: "ST", rating: 88 }, 
+            { name: "فكتور أوسيمين", pos: "ST", rating: 87 }
         ];
 
         let myRole = 1;
@@ -275,26 +278,28 @@
             const currentPosConfig = POSITION_ORDER[gameState.roundIndex];
             const targetPos = currentPosConfig.pos;
 
-            let sourcePool = (targetPos === "COACH") ? 
-                ((gameState.coachesPool && gameState.coachesPool.length > 0) ? [...gameState.coachesPool] : JSON.parse(JSON.stringify(coachesPool))) :
-                ((gameState.pool && gameState.pool.length > 0) ? [...gameState.pool] : JSON.parse(JSON.stringify(defaultPool)));
+            let isCoachRound = (targetPos === "COACH");
+            let sourcePool = isCoachRound ? gameState.coachesPool : gameState.pool;
 
             let availableInPos = sourcePool.filter(p => p.pos === targetPos);
 
+            // الحماية من التوقف (Fallback): إذا لم يتوفر لاعبان بنفس المركز، نستخدم كل المتاحين في المخزن
             if (availableInPos.length < 2) {
-                alert("لا يوجد عدد كافٍ من الخيارات لمركز: " + currentPosConfig.label);
+                availableInPos = sourcePool;
+            }
+
+            if (!availableInPos || availableInPos.length < 2) {
+                alert("تعذر العثور على لاعبين كافيين لهذه الجولة!");
                 return;
             }
 
-            // اختيار لاعبين عشوائيين بنفس المركز المطلوب للجولة
             const p1Index = Math.floor(Math.random() * availableInPos.length);
             const auctionPlayer = availableInPos[p1Index];
 
             const remainingInPos = availableInPos.filter((_, idx) => idx !== p1Index);
             const freePlayer = remainingInPos[Math.floor(Math.random() * remainingInPos.length)];
 
-            // خصم اللاعبين من الـ Pool
-            if (targetPos === "COACH") {
+            if (isCoachRound) {
                 gameState.coachesPool = gameState.coachesPool.filter(p => p.name !== auctionPlayer.name && p.name !== freePlayer.name);
             } else {
                 gameState.pool = gameState.pool.filter(p => p.name !== auctionPlayer.name && p.name !== freePlayer.name);
@@ -460,7 +465,6 @@
             updateTurnUI();
         }
 
-        // عرض الفريقين متقابلين وفق ترتيب المراكز
         function renderParallelTeams() {
             const team1List = document.getElementById('team-1');
             const team2List = document.getElementById('team-2');
