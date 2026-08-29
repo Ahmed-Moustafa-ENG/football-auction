@@ -48,7 +48,7 @@
 </head>
 <body>
 
-    <h1>🏆 مزad كرة القدم الحر (11 ضد 11) 🏆</h1>
+    <h1>🏆 مزاد كرة القدم الحر (11 ضد 11) 🏆</h1>
 
     <div class="player-select">
         <label style="font-weight:bold; font-size: 18px;">دورك في المباراة: </label>
@@ -121,191 +121,51 @@
 
     <script>
         const defaultPool = [
-            // الأسطورتان 99
             { name: "ليونيل ميسي", pos: "RW", rating: 99 },
             { name: "كريستيانو رونالدو", pos: "ST", rating: 99 },
 
-            // حراس المرمى (GK) - 30 حارس
+            // حراس المرمى (GK)
             { name: "تيبو كورتوا", pos: "GK", rating: 90 }, { name: "أليسون بيكر", pos: "GK", rating: 89 },
             { name: "مانويل نوير", pos: "GK", rating: 88 }, { name: "جانلويجي دوناروما", pos: "GK", rating: 88 },
             { name: "إيدرسون مواريش", pos: "GK", rating: 88 }, { name: "يان أوبلاك", pos: "GK", rating: 88 },
             { name: "مارك أندريه تير شتيغن", pos: "GK", rating: 88 }, { name: "مايك ماينان", pos: "GK", rating: 87 },
             { name: "إيميليانو مارتينيز", pos: "GK", rating: 87 }, { name: "أوناي سيمون", pos: "GK", rating: 85 },
             { name: "ديفيد رايا", pos: "GK", rating: 84 }, { name: "يامان سومر", pos: "GK", rating: 84 },
-            { name: "غولييلمو فيكاريو", pos: "GK", rating: 84 }, { name: "أليكس ميريت", pos: "GK", rating: 82 },
-            { name: "ووجتشيك شتشيسني", pos: "GK", rating: 84 }, { name: "كيبا أريزابالاغا", pos: "GK", rating: 80 },
-            { name: "روبرت سانشيز", pos: "GK", rating: 79 }, { name: "أورجان نيلاند", pos: "GK", rating: 78 },
-            { name: "بريند لينو", pos: "GK", rating: 81 }, { name: "ألفونس أريولا", pos: "GK", rating: 80 },
-            { name: "ديميترييفسكي", pos: "GK", rating: 79 }, { name: "دومينيك ليفاكوفيتش", pos: "GK", rating: 81 },
-            { name: "لوكاس هراديكي", pos: "GK", rating: 83 }, { name: "جريجور كوبيل", pos: "GK", rating: 85 },
-            { name: "أناتولي تروبين", pos: "GK", rating: 80 }, { name: "ديوغو كوستا", pos: "GK", rating: 83 },
-            { name: "روي باتريسيو", pos: "GK", rating: 79 }, { name: "غييرمو أوتشوا", pos: "GK", rating: 78 },
             { name: "بونو (ياسين بونو)", pos: "GK", rating: 85 }, { name: "محمد الشناوي", pos: "GK", rating: 79 },
 
-            // قلوب الدفاع (CB) - 70 لاعب
+            // قلوب الدفاع (CB)
             { name: "فيرجيل فان دايك", pos: "CB", rating: 90 }, { name: "روبن دياز", pos: "CB", rating: 89 },
             { name: "أنطونيو روديغر", pos: "CB", rating: 88 }, { name: "وليام ساليبا", pos: "CB", rating: 88 },
             { name: "ماركينيوس", pos: "CB", rating: 86 }, { name: "رونالد أراوخو", pos: "CB", rating: 86 },
             { name: "إيدير ميليتاو", pos: "CB", rating: 85 }, { name: "دافيد ألابا", pos: "CB", rating: 85 },
             { name: "أليساندرو باستوني", pos: "CB", rating: 87 }, { name: "غابرييل ماغالهايس", pos: "CB", rating: 86 },
-            { name: "جوناثان تاه", pos: "CB", rating: 86 }, { name: "جوليس كوندي", pos: "CB", rating: 85 },
-            { name: "ماتيس دي ليخت", pos: "CB", rating: 84 }, { name: "كيم مين جاي", pos: "CB", rating: 84 }, { name: "كريستيان روميرو", pos: "CB", rating: 84 },
-            { name: "سليم أومتيشي", pos: "CB", rating: 83 }, { name: "مانويل أكانجي", pos: "CB", rating: 84 },
-            { name: "إيميرك لابورت", pos: "CB", rating: 83 }, { name: "نيثان أكي", pos: "CB", rating: 83 },
-            { name: "جون ستونز", pos: "CB", rating: 85 }, { name: "ميكي فان دي فين", pos: "CB", rating: 83 },
-            { name: "سفين بوتمان", pos: "CB", rating: 82 }, { name: "أكسيل ديساسي", pos: "CB", rating: 79 },
-            { name: "بن وايت", pos: "CB", rating: 83 }, { name: "إبراهيما كوناثي", pos: "CB", rating: 83 },
-            { name: "جو غوميز", pos: "CB", rating: 80 }, { name: "هاري ماغواير", pos: "CB", rating: 80 },
-            { name: "ليساندرو مارتينيز", pos: "CB", rating: 84 }, { name: "فيكتور ليندلوف", pos: "CB", rating: 78 },
-            { name: "بواو توريس", pos: "CB", rating: 83 }, { name: "إزري كونسا", pos: "CB", rating: 81 },
-            { name: "مارك غويي", pos: "CB", rating: 82 }, { name: "لوكاس بيرالدو", pos: "CB", rating: 78 }, { name: "ميلان شكرينيار", pos: "CB", rating: 82 },
-            { name: "دانيلو", pos: "CB", rating: 81 }, { name: "جلين بريمر", pos: "CB", rating: 85 },
-            { name: "نيكولو كاسالي", pos: "CB", rating: 78 }, { name: "جان مانشيني", pos: "CB", rating: 81 },
-            { name: "إيفان نديكا", pos: "CB", rating: 80 }, { name: "أمير رحماني", pos: "CB", rating: 81 },
-            { name: "أليساندرو بونجيورنو", pos: "CB", rating: 82 }, { name: "فيكايو توموري", pos: "CB", rating: 82 },
-            { name: "مالك ثياو", pos: "CB", rating: 79 }, { name: "ماتيو غابيا", pos: "CB", rating: 78 },
-            { name: "أندريا باستوني", pos: "CB", rating: 77 }, { name: "باو كوبارسي", pos: "CB", rating: 80 },
-            { name: "إينيغو مارتينيز", pos: "CB", rating: 81 }, { name: "أندرياس كريستنسن", pos: "CB", rating: 82 },
-            { name: "تيلو كيرير", pos: "CB", rating: 77 }, { name: "كاستيلو لوكيبا", pos: "CB", rating: 81 },
-            { name: "ويلي أوربان", pos: "CB", rating: 82 }, { name: "إدموند تابسوبا", pos: "CB", rating: 83 },
-            { name: "أوديلون كوسونو", pos: "CB", rating: 80 }, { name: "أوزان كاباك", pos: "CB", rating: 77 },
-            { name: "رومان سايس", pos: "CB", rating: 78 }, { name: "نايف أكرد", pos: "CB", rating: 80 },
-            { name: "عبد المنعم", pos: "CB", rating: 78 }, { name: "علي البليهي", pos: "CB", rating: 77 },
-            { name: "كاليدو كوليبالي", pos: "CB", rating: 83 }, { name: "تياغو سيلفا", pos: "CB", rating: 81 },
-            { name: "بيبي", pos: "CB", rating: 80 }, { name: "ماتس هوملز", pos: "CB", rating: 84 },
-            { name: "نيكلاس زوله", pos: "CB", rating: 80 }, { name: "نيكو شلوتربيك", pos: "CB", rating: 82 },
-            { name: "كيفن دانسو", pos: "CB", rating: 80 }, { name: "فاسوندو ميدينا", pos: "CB", rating: 80 },
-            { name: "مارك بارترا", pos: "CB", rating: 77 }, { name: "شادي رياض", pos: "CB", rating: 78 },
-            { name: "ميكاييل فاي", pos: "CB", rating: 75 }, { name: "جيوفاني دي لورينزو", pos: "CB", rating: 82 },
 
-            // الظهير الأيمن (RB) - 25 لاعب
+            // الظهير الأيمن (RB)
             { name: "داني كارفاخال", pos: "RB", rating: 87 }, { name: "أشرف حكيمي", pos: "RB", rating: 86 },
             { name: "ترينت ألكسندر أرنولد", pos: "RB", rating: 86 }, { name: "جيريمي فريمبونغ", pos: "RB", rating: 85 },
             { name: "كايل ووكر", pos: "RB", rating: 84 }, { name: "كيران تريبير", pos: "RB", rating: 83 },
-            { name: "باشي بورو", pos: "RB", rating: 82 }, { name: "ديوغو دالوت", pos: "RB", rating: 82 },
-            { name: "نصير مزراوي", pos: "RB", rating: 81 }, { name: "بن وايت", pos: "RB", rating: 83 },
-            { name: "مالو غوستو", pos: "RB", rating: 80 }, { name: "دومفريس", pos: "RB", rating: 82 }, { name: "ماتيو دارميان", pos: "RB", rating: 80 },
-            { name: "دافيدي كالابريا", pos: "RB", rating: 79 }, { name: "إيمرسون رويال", pos: "RB", rating: 78 },
-            { name: "ناهويل مولينا", pos: "RB", rating: 81 }, { name: "ماركوس يورينتي", pos: "RB", rating: 83 },
-            { name: "لوكاس فاسكيز", pos: "RB", rating: 80 }, { name: "أوسكار مينجويزا", pos: "RB", rating: 78 },
-            { name: "خوان كوادرادو", pos: "RB", rating: 78 }, { name: "سيرجينيو ديست", pos: "RB", rating: 78 },
-            { name: "سيكو فوفانا", pos: "RB", rating: 77 }, { name: "سعود عبد الحميد", pos: "RB", rating: 76 },
-            { name: "طارق طارق", pos: "RB", rating: 76 }, { name: "مايكل أوليز", pos: "RB", rating: 82 },
 
-            // الظهير الأيسر (LB) - 25 لاعب
+            // الظهير الأيسر (LB)
             { name: "ألفونسو ديفيز", pos: "LB", rating: 85 }, { name: "ثيو هيرنانديز", pos: "LB", rating: 86 },
             { name: "اندرو روبرتسون", pos: "LB", rating: 85 }, { name: "فيرلاند ميندي", pos: "LB", rating: 83 },
             { name: "فيديريكو ديماركو", pos: "LB", rating: 85 }, { name: "أليخاندرو جريمالدو", pos: "LB", rating: 86 },
-            { name: "لوك شو", pos: "LB", rating: 82 }, { name: "مارك كوكوريلا", pos: "LB", rating: 82 },
-            { name: "أليكس مورينو", pos: "LB", rating: 79 }, { name: "دستيني أودوجي", pos: "LB", rating: 82 },
-            { name: "أليكس تيليس", pos: "LB", rating: 78 }, { name: "ريغيلون", pos: "LB", rating: 78 },
-            { name: "كيران تيرني", pos: "LB", rating: 79 }, { name: "أولكسندر زينشينكو", pos: "LB", rating: 81 },
-            { name: "نونو مينديز", pos: "LB", rating: 83 }, { name: "برينان جونسون", pos: "LB", rating: 78 },
-            { name: "رافاييل غيريرو", pos: "LB", rating: 81 }, { name: "بورسيل برادلي", pos: "LB", rating: 77 },
-            { name: "يان ماتسين", pos: "LB", rating: 80 }, { name: "فرانسيسكو غارسيا", pos: "LB", rating: 79 }, { name: "خافي غالان", pos: "LB", rating: 78 },
-            { name: "ماريو هيرموسو", pos: "LB", rating: 81 }, { name: "علي معلول", pos: "LB", rating: 78 },
-            { name: "رينان لودي", pos: "LB", rating: 78 }, { name: "ماتيو ريتيغي", pos: "LB", rating: 79 },
 
-            // خط الوسط (CM / CDM / CAM) - 80 لاعب
+            // خط الوسط (CM)
             { name: "رودري", pos: "CM", rating: 91 }, { name: "كيفين دي بروين", pos: "CM", rating: 91 },
             { name: "جود بيلينجهام", pos: "CM", rating: 90 }, { name: "فيديريكو فالفيردي", pos: "CM", rating: 89 },
             { name: "مارتن أوديغارد", pos: "CM", rating: 89 }, { name: "ديكلان رايس", pos: "CM", rating: 88 },
-            { name: "بيرناردو سيلفا", pos: "CM", rating: 88 }, { name: "لوكا مودريتش", pos: "CM", rating: 86 },
-            { name: "إلكاي غوندوغان", pos: "CM", rating: 87 }, { name: "فرينكي دي يونغ", pos: "CM", rating: 87 }, { name: "أوريلين تشواميني", pos: "CM", rating: 86 },
-            { name: "أودواردو كامافينغا", pos: "CM", rating: 85 }, { name: "أليكسيس ماك أليستر", pos: "CM", rating: 86 },
-            { name: "دومينيك سوبوسلاي", pos: "CM", rating: 85 }, { name: "برونو فيرنانديز", pos: "CM", rating: 87 },
-            { name: "كوبي ماينو", pos: "CM", rating: 81 }, { name: "كاسيميرو", pos: "CM", rating: 84 },
-            { name: "كريستيان إريكسن", pos: "CM", rating: 80 }, { name: "ماسن ماونت", pos: "CM", rating: 80 },
-            { name: "ساندرو تونالي", pos: "CM", rating: 84 }, { name: "برونو غيماريش", pos: "CM", rating: 85 },
-            { name: "جولينتون", pos: "CM", rating: 82 }, { name: "لوكاس باكيتا", pos: "CM", rating: 83 },
-            { name: "إدسون ألفاريز", pos: "CM", rating: 81 }, { name: "جيمس ماديسون", pos: "CM", rating: 85 },
-            { name: "عز الدين أوناحي", pos: "CM", rating: 79 }, { name: "سفيان أمرابط", pos: "CM", rating: 80 },
-            { name: "مورغان جيبس وايت", pos: "CM", rating: 81 }, { name: "نيكولو باريللا", pos: "CM", rating: 87 },
-            { name: "هاكان تشالخانوغلو", pos: "CM", rating: 86 }, { name: "هنريك مخيتاريان", pos: "CM", rating: 83 },
-            { name: "دافيد فراتيسي", pos: "CM", rating: 82 }, { name: "بيوتر زيلينسكي", pos: "CM", rating: 82 },
-            { name: "مانويل لوكاتيلي", pos: "CM", rating: 81 }, { name: "دانيلي روفيللا", pos: "CM", rating: 79 },
-            { name: "ماتيو غندوزي", pos: "CM", rating: 80 }, { name: "لورينزو بيليغريني", pos: "CM", rating: 83 },
-            { name: "برايان كريستانتي", pos: "CM", rating: 80 }, { name: "لياندرو باريديس", pos: "CM", rating: 79 },
-            { name: "فرانسيسكو كونسيكاو", pos: "CM", rating: 79 }, { name: "ستانيسلاف لوبوتبكا", pos: "CM", rating: 84 },
-            { name: "فرانك أنغيسا", pos: "CM", rating: 83 }, { name: "تاني رايندرز", pos: "CM", rating: 82 },
-            { name: "روبن لوفتوس تشيك", pos: "CM", rating: 80 }, { name: "يونس موسى", pos: "CM", rating: 78 },
-            { name: "إسماعيل بن ناصر", pos: "CM", rating: 82 }, { name: "داني أولمو", pos: "CM", rating: 86 },
-            { name: "بيدري", pos: "CM", rating: 87 }, { name: "غافي", pos: "CM", rating: 85 },
-            { name: "فيرمين لوبيز", pos: "CM", rating: 81 }, { name: "أوريول روميو", pos: "CM", rating: 78 },
-            { name: "مارك كاسادو", pos: "CM", rating: 78 }, { name: "مارك برنال", pos: "CM", rating: 76 },
-            { name: "ميكيل ميرينو", pos: "CM", rating: 84 }, { name: "مارتن زوبيميندي", pos: "CM", rating: 84 },
-            { name: "كوكي", pos: "CM", rating: 82 }, { name: "رودريغو دي بول", pos: "CM", rating: 84 },
-            { name: "كونور غالاغر", pos: "CM", rating: 82 }, { name: "بابلو باريوس", pos: "CM", rating: 79 },
-            { name: "غرانيت تشاكا", pos: "CM", rating: 86 }, { name: "إزيكيل بالاسيوس", pos: "CM", rating: 84 },
-            { name: "أندريتش", pos: "CM", rating: 82 }, { name: "جمال موسيالا", pos: "CM", rating: 88 },
-            { name: "ألكسندر بافلوفيتش", pos: "CM", rating: 80 }, { name: "كونراد لايمر", pos: "CM", rating: 82 },
-            { name: "يوناس هوفمان", pos: "CM", rating: 82 }, { name: "توماس مولر", pos: "CM", rating: 83 },
-            { name: "مارسيل سابيتزر", pos: "CM", rating: 82 }, { name: "إمري تشان", pos: "CM", rating: 80 },
-            { name: "جوليان براندت", pos: "CM", rating: 84 }, { name: "فليكس نيميتشا", pos: "CM", rating: 78 },
-            { name: "سيرغي ميلينكوفيتش سافيتش", pos: "CM", rating: 85 }, { name: "نجولو كونتي", pos: "CM", rating: 84 },
-            { name: "روبن نيفيز", pos: "CM", rating: 83 }, { name: "جورجينيو", pos: "CM", rating: 81 },
-            { name: "إمام عاشور", pos: "CM", rating: 79 }, { name: "سيد زيزو", pos: "CM", rating: 80 },
-            { name: "مروان عطية", pos: "CM", rating: 78 }, { name: "أوريليان تشواميني", pos: "CM", rating: 85 },
 
-            // الأجنحة اليسرى (LW) - 35 لاعب
+            // الأجنحة اليسرى (LW)
             { name: "فينيسيوس جونيور", pos: "LW", rating: 90 }, { name: "رافاييل لياو", pos: "LW", rating: 86 },
             { name: "خفيشا كفاراتسخيليا", pos: "LW", rating: 86 }, { name: "لويس دياز", pos: "LW", rating: 85 },
-            { name: "جابرييل مارتينيلي", pos: "LW", rating: 84 }, { name: "جاك غريليش", pos: "LW", rating: 83 },
-            { name: "جيريمي دوكو", pos: "LW", rating: 82 }, { name: "ماركوس راشفورد", pos: "LW", rating: 83 },
-            { name: "أليخاندرو جارناتشو", pos: "LW", rating: 81 }, { name: "أنطوني غوردون", pos: "LW", rating: 83 },
-            { name: "هارفي بارنز", pos: "LW", rating: 80 }, { name: "سون هيونغ مين", pos: "LW", rating: 87 },
-            { name: "رحيم ستيرلينغ", pos: "LW", rating: 81 }, { name: "جيدون سانشو", pos: "LW", rating: 82 },
-            { name: "غالينو", pos: "LW", rating: 81 }, { name: "ميكائيل أويارزابال", pos: "LW", rating: 83 },
-            { name: "أنسو فاتي", pos: "LW", rating: 78 }, { name: "فيرران توريس", pos: "LW", rating: 81 },
-            { name: "سامو شوكويزي", pos: "LW", rating: 79 }, { name: "أليكس باينا", pos: "LW", rating: 82 }, { name: "أيوزي بيريز", pos: "LW", rating: 80 },
-            { name: "أرماندو بروجا", pos: "LW", rating: 77 }, { name: "نيكو وليامز", pos: "LW", rating: 85 },
-            { name: "سامو أوموروديون", pos: "LW", rating: 78 }, { name: "كينغسلي كومان", pos: "LW", rating: 84 },
-            { name: "سيرج جنابري", pos: "LW", rating: 82 }, { name: "ليروي ساني", pos: "LW", rating: 84 },
-            { name: "كريم أديمي", pos: "LW", rating: 80 }, { name: "جايمي بينو جيتنز", pos: "LW", rating: 78 },
-            { name: "ساديو ماني", pos: "LW", rating: 84 }, { name: "تريزيجيه", pos: "LW", rating: 78 },
-            { name: "عمر مرموش", pos: "LW", rating: 84 }, { name: "سليم الدوسري", pos: "LW", rating: 80 },
-            { name: "ينيك كاراسكو", pos: "LW", rating: 81 }, { name: "ستيفان شعراوي", pos: "LW", rating: 78 },
 
-            // الأجنحة اليمنى (RW) - 35 لاعب
-            { name: "محمد صلاح", pos: "RW", rating: 89 }, { name: "لامين يامال", pos: "RW", rating: 88 },
+            // الأجنحة اليمنى (RW)
             { name: "بوكايو ساكا", pos: "RW", rating: 88 }, { name: "رودريغو غوس", pos: "RW", rating: 86 },
             { name: "عثمان ديمبيلي", pos: "RW", rating: 86 }, { name: "رافينيا", pos: "RW", rating: 86 },
-            { name: "كول بالمر", pos: "RW", rating: 86 }, { name: "برينان جونسون", pos: "RW", rating: 80 },
-            { name: "ديان كولوسيفسكي", pos: "RW", rating: 83 }, { name: "ميغيل ألميرون", pos: "RW", rating: 79 },
-            { name: "جارود بوين", pos: "RW", rating: 83 }, { name: "نوني مادويكي", pos: "RW", rating: 79 },
-            { name: "أنطوني", pos: "RW", rating: 77 }, { name: "أماد ديالو", pos: "RW", rating: 78 },
-            { name: "تاكيفوسا كوبو", pos: "RW", rating: 82 }, { name: "إيناكي وليامز", pos: "RW", rating: 81 },
-            { name: "برتوش يلمظ", pos: "RW", rating: 79 }, { name: "أردول جولر", pos: "RW", rating: 80 },
-            { name: "إبراهيم دياز", pos: "RW", rating: 82 }, { name: "أنخيل كوريا", pos: "RW", rating: 81 },
-            { name: "ماتيو بوليتانو", pos: "RW", rating: 80 }, { name: "دومينيك بيراردي", pos: "RW", rating: 82 },
-            { name: "ريكاردو أورسوليني", pos: "RW", rating: 81 }, { name: "نيكولاس غونزاليس", pos: "RW", rating: 81 },
-            { name: "مورغان روجرز", pos: "RW", rating: 79 }, { name: "يوكيرس", pos: "RW", rating: 82 },
-            { name: "فلوريان فيرتز", pos: "RW", rating: 88 }, { name: "أمين عدلي", pos: "RW", rating: 79 },
-            { name: "جوناس هوفمان", pos: "RW", rating: 81 }, { name: "رياض محرز", pos: "RW", rating: 83 },
-            { name: "مالكوم", pos: "RW", rating: 81 }, { name: "أوتافيو", pos: "RW", rating: 80 },
-            { name: "مصطفى فتحي", pos: "RW", rating: 77 }, { name: "حكيم زياش", pos: "RW", rating: 80 },
-            { name: "أشرف بن شرقي", pos: "RW", rating: 78 },
 
-            // رأس الحربة / مهاجمين (ST) - 40 لاعب
+            // رأس الحربة (ST)
             { name: "كيليان مبابي", pos: "ST", rating: 91 }, { name: "إرلينغ هالاند", pos: "ST", rating: 91 },
-            { name: "هاري كين", pos: "ST", rating: 90 }, { name: "لاوتارو مارتينيز", pos: "ST", rating: 89 },
-            { name: "روبرت ليفاندوفسكي", pos: "ST", rating: 88 }, { name: "فكتور جيوكيريس", pos: "ST", rating: 86 },
-            { name: "أولي واتكينز", pos: "ST", rating: 85 }, { name: "ألكسندر إيساك", pos: "ST", rating: 85 },
-            { name: "فكتور أوسيمين", pos: "ST", rating: 87 }, { name: "دوشان فلاهوفيتش", pos: "ST", rating: 84 },
-            { name: "ماركوس تورام", pos: "ST", rating: 84 }, { name: "جوليان ألفاريز", pos: "ST", rating: 85 },
-            { name: "داروين نونيز", pos: "ST", rating: 82 }, { name: "كودي جاكبو", pos: "ST", rating: 83 },
-            { name: "كاي هافيرتز", pos: "ST", rating: 83 }, { name: "غابرييل خيسوس", pos: "ST", rating: 82 },
-            { name: "إيفان توني", pos: "ST", rating: 83 }, { name: "نيكولاس جاكسون", pos: "ST", rating: 81 },
-            { name: "كريستوفر نكونكو", pos: "ST", rating: 83 }, { name: "جواو بيدرو", pos: "ST", rating: 80 },
-            { name: "ماثيوس كونا", pos: "ST", rating: 81 }, { name: "دومينيك سولانكي", pos: "ST", rating: 81 },
-            { name: "ريتشارليسون", pos: "ST", rating: 80 }, { name: "أنطوان غريزمان", pos: "ST", rating: 87 },
-            { name: "ألكسندر سورلوث", pos: "ST", rating: 82 }, { name: "ألفارو موراتا", pos: "ST", rating: 82 },
-            { name: "جيانلوكا سكاماتكا", pos: "ST", rating: 81 }, { name: "ماتيو ريتيغي", pos: "ST", rating: 80 }, { name: "مويس كين", pos: "ST", rating: 80 },
-            { name: "تشيرو إيموبيلي", pos: "ST", rating: 81 }, { name: "سيرو جيراسي", pos: "ST", rating: 84 }, { name: "باتريك شيك", pos: "ST", rating: 82 },
-            { name: "فيكتور بونيفاس", pos: "ST", rating: 83 }, { name: "نيكلاس فولكروج", pos: "ST", rating: 82 },
-            { name: "سيباستيان هالير", pos: "ST", rating: 80 }, { name: "كريم بنزيما", pos: "ST", rating: 85 },
-            { name: "ألكسندر ميتروفيتش", pos: "ST", rating: 81 }, { name: "مصطفى محمد", pos: "ST", rating: 79 },
-            { name: "وسام بن يدر", pos: "ST", rating: 80 }, { name: "يوسف النصيري", pos: "ST", rating: 81 }
+            { name: "هاري كين", pos: "ST", rating: 90 }, { name: "لاوتارو مارتينيز", pos: "ST", rating: 89 }
         ];
 
         let myRole = 1;
@@ -405,6 +265,7 @@
 
             let pool = (gameState.pool && gameState.pool.length > 0) ? [...gameState.pool] : JSON.parse(JSON.stringify(defaultPool));
 
+            // اختيار المراكز المتاحة للطرفين وبها لاعبان على الأقل
             const validPositions = Array.from(new Set(pool.map(p => p.pos))).filter(pos => {
                 const countInPool = pool.filter(p => p.pos === pos).length;
                 return countInPool >= 2 && canPlayerTakePos(team1, pos) && canPlayerTakePos(team2, pos);
@@ -415,14 +276,19 @@
                 return;
             }
 
+            // اختيار مركز عشوائي موحد للجولة
             const chosenPos = validPositions[Math.floor(Math.random() * validPositions.length)];
             const samePosPlayers = pool.filter(p => p.pos === chosenPos);
 
+            // سحب لاعبان من نفس المركز بالضبط
             const p1Index = Math.floor(Math.random() * samePosPlayers.length);
             const auctionPlayer = samePosPlayers[p1Index];
 
             const remainingInPos = samePosPlayers.filter((_, idx) => idx !== p1Index);
             const freePlayer = remainingInPos[Math.floor(Math.random() * remainingInPos.length)];
+
+            // ضمان تطابق المركز 100%
+            freePlayer.pos = auctionPlayer.pos;
 
             pool = pool.filter(p => p.name !== auctionPlayer.name && p.name !== freePlayer.name);
 
